@@ -1,47 +1,56 @@
-import { config } from "dotenv";
-import { LogSnag } from "logsnag";
-import mqtt from "mqtt";
+var dotenv = require("dotenv");
+var mqtt = require("mqtt");
+var Push = require("pushover-notifications");
 
 //dotenv config
-config();
+dotenv.config();
 
-const logsnag = new LogSnag({
-  token: process.env.LTOKEN,
-  project: "hackerstat",
+const p = new Push({
+  user: process.env.PUSHOVER_USER,
+  token: process.env.PUSHOVER_TOKEN,
 });
 
-const client = mqtt.connect(process.env.MQTTH);
+var openmsg = {
+  // These values correspond to the parameters detailed on https://pushover.net/api
+  // 'message' is required. All other values are optional.
+  message: "The hacker Space is open ", // required
+  title: "Hackerspace is open 👀",
+  sound: "defualt",
+  device: "iphone",
+  priority: 1,
+};
+var closedmsg = {
+  // These values correspond to the parameters detailed on https://pushover.net/api
+  // 'message' is required. All other values are optional.
+  message: "the hackerspace is closed now", // required
+  title: "Hackerspace closed 👎",
+  sound: "magic",
+  device: "iphone",
+  priority: 1,
+};
 
-async function notifyc() {
-   await logsnag.publish({
-  channel: "hackerstat",
-  event: "Hackerspace",
-  description: "The Space is closed",
-  icon: "💀",
-  tags: {
-    closed: "Closed",
-  },
-  notify: true,
-});
-console.log("sent closed notfications ")
-}
-
-async function notifyo() {
-await logsnag.publish({
-  channel: "hackerstat",
-  event: "Hackerspace",
-  description: "The Space is open",
-  icon: "👀",
-  tags: {
-    closed: "OPEN",
-  },
-  notify: true,
-});
-}
+//async function notifyo() {
+//}
+options = {
+  clean: true, // retain session
+  connectTimeout: 4000,
+  port: 8883,
+  username: process.env.MQTT_USERNAME,
+  password: process.env.MQTT_PASSWORD,
+};
+const client = mqtt.connect(process.env.MQTTH, options);
 
 let previousState = "";
 
-const topic = "hackeriet/space_state";
+const topic = process.env.TOPIC;
+
+client.on("reconnect", (error) => {
+  console.log("reconnecting:", error);
+});
+
+client.on("error", (error) => {
+  console.log("Connection failed:", error);
+});
 
 client.on("connect", () => {
   console.log("Connected");
@@ -56,11 +65,23 @@ client.on("connect", () => {
     // open is capital letters and closed is lowercase
     else if (previousState == "OPEN" && parsePayload.status === "closed") {
       // TODO:notify of change
-      notifyc();
+      p.send(closedmsg, function (err, result) {
+        if (err) {
+          throw err;
+        }
+
+        console.log(result);
+      });
       console.log("closed");
     } else if (previousState == "closed" && parsePayload.status === "OPEN") {
       // TODO:notify of change
-      notifyo();
+      p.send(openmsg, function (err, result) {
+        if (err) {
+          throw err;
+        }
+
+        console.log(result);
+      });
       console.log("OPEN");
     }
 
