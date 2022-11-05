@@ -1,0 +1,6 @@
+version: '3.9'
+services:
+  notify:
+    image: notify:latest
+    container_name: hacker-notify
+    env_file: .env
