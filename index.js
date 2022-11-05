@@ -34,7 +34,7 @@ var closedmsg = {
 options = {
   clean: true, // retain session
   connectTimeout: 4000,
-  port: 1883,
+  port: 8883,
   username: process.env.MQTT_USERNAME,
   password: process.env.MQTT_PASSWORD,
 };
