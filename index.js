@@ -29,12 +29,10 @@ var closedmsg = {
   priority: 1,
 };
 
-//async function notifyo() {
-//}
 options = {
   clean: true, // retain session
   connectTimeout: 4000,
-  port: 1883,
+  port: 8883,
   username: process.env.MQTT_USERNAME,
   password: process.env.MQTT_PASSWORD,
 };
@@ -56,15 +54,8 @@ client.on("connect", () => {
   console.log("Connected");
   client.subscribe([topic], console.log);
   client.on("message", (topic, payload) => {
-    //console.log('got the message:', topic, payload.toString())
     const parsePayload = payload.toString();
-    if (previousState == "") {
-      // TODO:notify of change
-      console.log(parsePayload)
-    }
-    // open is capital letters and closed is lowercase
-    else if (previousState == "OPEN" && parsePayload == "CLOSED") {
-      // TODO:notify of change
+    if ((previousState == "OPEN" || previousState == "")  && parsePayload == "CLOSED") {
       p.send(closedmsg, function (err, result) {
         if (err) {
           throw err;
@@ -73,8 +64,7 @@ client.on("connect", () => {
         console.log(result);
       });
       console.log("CLOSED");
-    } else if (previousState == "CLOSED" && parsePayload == "OPEN") {
-      // TODO:notify of change
+    } else if ((previousState == "CLOSED" || previousState == "")  && parsePayload == "OPEN") {
       p.send(openmsg, function (err, result) {
         if (err) {
           throw err;
