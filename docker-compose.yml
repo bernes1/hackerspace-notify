@@ -5,3 +5,4 @@ services:
     image: notify:latest
     container_name: hacker-notify
     env_file: .env
+

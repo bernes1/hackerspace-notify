@@ -11,4 +11,3 @@ To start the container run this command in the directory with the docker-compose
 ```bash
 docker-compose up -d
 ```
-
