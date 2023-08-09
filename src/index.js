@@ -1,9 +1,12 @@
 var dotenv = require("dotenv");
 var mqtt = require("mqtt");
 const notify = require("./notify");
+const webhooknotify = require("./webhooknotify");
 const sendPushover = notify.sendPushover;
 const openmsg = notify.openmsg;
 const closedmsg = notify.closedmsg;
+const sendDiscordOpen = webhooknotify.sendDiscordOpen;
+const sendDiscordClosed = webhooknotify.sendDiscordClosed;
 
 //dotenv config
 dotenv.config();
@@ -37,9 +40,11 @@ client.on("connect", () => {
     const parsePayload = payload.toString();
     if ((previousState == "OPEN" || previousState == "")  && parsePayload == "CLOSED") {
       sendPushover(closedmsg);
+      sendDiscordClosed();
       console.log("CLOSED");
     } else if ((previousState == "CLOSED" || previousState == "")  && parsePayload == "OPEN") {
       sendPushover(openmsg);
+      sendDiscordOpen();
       console.log("OPEN");
     }
     previousState = parsePayload;
