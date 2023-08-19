@@ -3,6 +3,5 @@ services:
   notify:
    restart: unless-stopped
    image: hackerspace-notify:latest
-   container_name: "notify"
    env_file: .env
 
