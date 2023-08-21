@@ -1,29 +1,29 @@
 const dotenv = require('dotenv');
-const { EmbedBuilder, WebhookClient } = require('discord.js');
 dotenv.config();
-const webhookClient = new WebhookClient({ url: process.env.DISCORD_WEBHOOK });
 
+let discordUrl = process.env.DISCORD_WEBHOOK
 
 function sendDiscordOpen() {
-    const embed = new EmbedBuilder()
-        .setTitle('Hackeriet is open')
-        .setColor(0);
-    webhookClient.send({
-        content: process.env.DISCORD_ROLE,
-        username: 'Hackeriet',
-        embeds: [embed],
-    });
+    let message = {"username": "hackeriet", "content": "Hackeriet is Open " + process.env.DISCORD_ROLE_ID}
+    fetch(discordUrl,{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    
+        body: JSON.stringify(message)
+    },)
 }
 
 function sendDiscordClosed() {
-    const embed = new EmbedBuilder()
-        .setTitle('Hackeriet is Closed')
-        .setColor(0);
-    webhookClient.send({
-        content: process.env.DISCORD_ROLE,
-        username: 'Hackeriet',
-        embeds: [embed],
-    });
+    let message = {"username": "hackeriet", "content": "Hackeriet is Closed " + process.env.DISCORD_ROLE_ID}
+    fetch(discordUrl,{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(message)
+    },)
 }
 
 module.exports = { sendDiscordOpen: sendDiscordOpen, sendDiscordClosed: sendDiscordClosed };
