@@ -21,7 +21,13 @@ options = {
 
 const client = mqtt.connect(process.env.MQTT_BROKER, options);
 
-let previousState = "";
+let previousState = ""; 
+
+const States ={
+  open: "OPEN", 
+  closed: "CLOSED", 
+  default: ""
+}
 
 const topic = process.env.MQTT_TOPIC;
 
@@ -38,11 +44,11 @@ client.on("connect", () => {
   client.subscribe([topic], console.log);
   client.on("message", (topic, payload) => {
     const parsePayload = payload.toString();
-    if ((previousState == "OPEN" || previousState == "")  && parsePayload == "CLOSED") {
+    if ((previousState == States.open || previousState == States.default)  && parsePayload == States.closed) {
       sendPushover(closedmsg);
       sendDiscordClosed();
       console.log("CLOSED");
-    } else if ((previousState == "CLOSED" || previousState == "")  && parsePayload == "OPEN") {
+    } else if ((previousState == States.closed || previousState == States.default)  && parsePayload == States.open) {
       sendPushover(openmsg);
       sendDiscordOpen();
       console.log("OPEN");
