@@ -9,6 +9,7 @@
   "author": "herman",
   "license": "ISC",
   "dependencies": {
+    "discord.js": "^14.12.1",
     "dotenv": "^16.0.2",
     "mqtt": "^4.3.7",
     "pushover-notifications": "^1.2.2"
