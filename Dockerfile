@@ -1,6 +1,7 @@
-FROM node:18-alpine
+FROM node:20-alpine
+USER node
 WORKDIR /app
-COPY package*.json ./
-RUN npm install 
-COPY . .
-CMD ["node", "/app/src/index.js"]
+COPY package*.json .
+RUN npm ci
+COPY src /app/
+CMD ["node", "index.js"]
