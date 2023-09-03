@@ -12,14 +12,16 @@ const sendDiscordClosed = webhooknotify.sendDiscordClosed;
 dotenv.config();
 
 options = {
-  clean: true, // retain session
-  connectTimeout: 4000,
-  port: process.env.MQTT_PORT,
+  protocol: 'mqtts',
+  host: process.env.MQTT_BROKER,
+  port: 8883,
   username: process.env.MQTT_USERNAME,
   password: process.env.MQTT_PASSWORD,
+  clean: true, // retain session
+  connectTimeout: 4000, // Timeout period
 };
-
-const client = mqtt.connect(process.env.MQTT_BROKER, options);
+console.log(process.env.MQTT_BROKER);
+const client = new mqtt.connect(options);
 
 let previousState = ""; 
 
