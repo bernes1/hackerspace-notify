@@ -12,5 +12,6 @@
     "dotenv": "^16.3.1",
     "mqtt": "^5.0.4",
     "pushover-notifications": "^1.2.2"
-  }
+  },
+  "type": "module"
 }
