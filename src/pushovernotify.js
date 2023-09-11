@@ -1,9 +1,8 @@
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 dotenv.config();
 
-let discordUrl = process.env.DISCORD_WEBHOOK
-
-function sendDiscordOpen() {
+let discordUrl = process.env.DISCORD_WEBHOOK;
+export function sendDiscordOpen() {
     let message = {"username":  process.env.DISCORD_USERNAME, "content": "Hackeriet is Open " + process.env.DISCORD_ROLE_ID}
     fetch(discordUrl,{
         method: "POST",
@@ -15,7 +14,7 @@ function sendDiscordOpen() {
     },)
 }
 
-function sendDiscordClosed() {
+export function sendDiscordClosed() {
     let message = {"username": process.env.DISCORD_USERNAME, "content": "Hackeriet is Closed " + process.env.DISCORD_ROLE_ID}
     fetch(discordUrl,{
         method: "POST",
@@ -25,5 +24,3 @@ function sendDiscordClosed() {
         body: JSON.stringify(message)
     },)
 }
-
-module.exports = { sendDiscordOpen: sendDiscordOpen, sendDiscordClosed: sendDiscordClosed };
