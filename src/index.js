@@ -1,17 +1,12 @@
-var dotenv = require("dotenv");
-var mqtt = require("mqtt");
-const notify = require("./notify");
-const webhooknotify = require("./webhooknotify");
-const sendPushover = notify.sendPushover;
-const openmsg = notify.openmsg;
-const closedmsg = notify.closedmsg;
-const sendDiscordOpen = webhooknotify.sendDiscordOpen;
-const sendDiscordClosed = webhooknotify.sendDiscordClosed;
+import dotenv from "dotenv";
+import * as mqtt from "mqtt";
+import {sendPushover, openmsg, closedmsg} from "./pushovernotify.js";
+import {sendDiscordClosed, sendDiscordOpen} from "./discordnotify.js"; 
 
 //dotenv config
 dotenv.config();
 
-options = {
+let options = {
   protocol: 'mqtts',
   host: process.env.MQTT_BROKER,
   port: 8883,
@@ -21,7 +16,7 @@ options = {
   connectTimeout: 4000, // Timeout period
 };
 console.log(process.env.MQTT_BROKER);
-const client = new mqtt.connect(options);
+let client = mqtt.connect(options);
 
 let previousState = ""; 
 
