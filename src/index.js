@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import * as mqtt from "mqtt";
 import {sendPushover, openmsg, closedmsg} from "./pushovernotify.js";
 import {sendDiscordClosed, sendDiscordOpen} from "./discordnotify.js"; 
+import {sendNtfyClosed, sendNtfyOpen} from "./ntfy.js";
 
 //dotenv config
 dotenv.config();
@@ -43,11 +44,14 @@ client.on("connect", () => {
     const parsePayload = payload.toString();
     if ((previousState == States.open || previousState == States.default)  && parsePayload == States.closed) {
       sendPushover(closedmsg);
+      sendNtfyClosed();
       sendDiscordClosed();
       console.log("CLOSED");
     } else if ((previousState == States.closed || previousState == States.default)  && parsePayload == States.open) {
       sendPushover(openmsg);
+      sendNtfyOpen();
       sendDiscordOpen();
+      sen
       console.log("OPEN");
     }
     previousState = parsePayload;
