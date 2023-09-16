@@ -51,7 +51,6 @@ client.on("connect", () => {
       sendPushover(openmsg);
       sendNtfyOpen();
       sendDiscordOpen();
-      sen
       console.log("OPEN");
     }
     previousState = parsePayload;
